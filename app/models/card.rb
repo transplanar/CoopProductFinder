@@ -21,18 +21,19 @@ class Card < ActiveRecord::Base
 
       results = regex_test(search_queries, slot)
     else
-      unless slot.sql_prepend.blank?
-        cards = Card.find_by_sql(slot.sql_prepend)
-
-        slot.cards = cards
-        slot.update_attribute(:queries, search_str)
-      else
-        if slot.cards.blank?
-          slot.cards = Card.all
-        end
-      end
-
-      results = {}
+      # TODO DSet- restore functionality of this
+      # unless slot.sql_prepend.blank?
+      #   cards = Card.find_by_sql(slot.sql_prepend)
+      #
+      #   slot.cards = cards
+      #   slot.update_attribute(:queries, search_str)
+      # else
+      #   if slot.cards.blank?
+      #     slot.cards = Card.all
+      #   end
+      # end
+      #
+      # results = {}
     end
 
     return results
@@ -128,38 +129,39 @@ class Card < ActiveRecord::Base
     return results_by_columns
   end
 
-  def self.query_to_regex query
-    clean_query = query.gsub(/[\[\]]/,"")
-    return /#{clean_query}/i
-  end
+  # TODO Parse out column arrays
+  # def self.query_to_regex query
+  #   clean_query = query.gsub(/[\[\]]/,"")
+  #   return /#{clean_query}/i
+  # end
 
-  def self.isolate_term term_string, query
-    unless is_numeric? term_string
-      test = term_string.split(", ")
+  # def self.isolate_term term_string, query
+  #   unless is_numeric? term_string
+  #     test = term_string.split(", ")
+  #
+  #     if test.length > 1
+  #       regex = query_to_regex(query)
+  #
+  #       test.each do |word|
+  #         if regex.match(word)
+  #           return word
+  #         end
+  #       end
+  #     end
+  #   end
+  #
+  #   return term_string
+  # end
 
-      if test.length > 1
-        regex = query_to_regex(query)
-
-        test.each do |word|
-          if regex.match(word)
-            return word
-          end
-        end
-      end
-    end
-
-    return term_string
-  end
-
-  def self.format_results hash
-    groups = hash.group_by{|e| e[:columns]}
-
-    groups.keys.each do |key|
-      groups[key.join(" < ")] = groups.delete key
-    end
-
-    return groups
-  end
+  # def self.format_results hash
+  #   groups = hash.group_by{|e| e[:columns]}
+  #
+  #   groups.keys.each do |key|
+  #     groups[key.join(" < ")] = groups.delete key
+  #   end
+  #
+  #   return groups
+  # end
 
   def self.get_relevant_columns
     exclude_columns = ['id', 'image_url', 'created_at', 'updated_at', 'slot_id']

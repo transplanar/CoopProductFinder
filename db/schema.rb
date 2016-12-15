@@ -11,39 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160201001613) do
+ActiveRecord::Schema.define(version: 20161214235650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "cards", force: :cascade do |t|
+  create_table "products", force: :cascade do |t|
     t.string   "name"
-    t.string   "image_url"
-    t.integer  "cost"
-    t.string   "types"
-    t.string   "category"
-    t.string   "expansion"
-    t.string   "strategy"
-    t.string   "terminality"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  create_table "cards_slots", id: false, force: :cascade do |t|
-    t.integer "slot_id", null: false
-    t.integer "card_id", null: false
-  end
-
-  add_index "cards_slots", ["card_id", "slot_id"], name: "index_cards_slots_on_card_id_and_slot_id", using: :btree
-  add_index "cards_slots", ["slot_id", "card_id"], name: "index_cards_slots_on_slot_id_and_card_id", using: :btree
-
-  create_table "slots", force: :cascade do |t|
-    t.string   "queries"
-    t.string   "image_url"
-    t.string   "sql_prepend"
-    t.string   "filters_humanized"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.integer  "code"
+    t.float    "price"
+    t.string   "keywords"
+    t.string   "department"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
