@@ -1,7 +1,7 @@
 class Product < ActiveRecord::Base
   scope :_name, ->(regex){Product.where("name ILIKE ?", regex)}
-  scope :_code, -> (regex){Product.where("code = ?", regex) }
-  scope :_price, -> (regex){Product.where("price = ?", regex) }
+  scope :_code, -> (regex){Product.where("code ILIKE ?", "%#{regex}%") }
+  scope :_price, ->(regex){Product.where("price = ?", regex)}
   scope :_keywords, ->(regex){Product.where("keywords ILIKE ?", regex)}
   scope :_department, ->(regex){Product.where("department ILIKE ?", regex)}
 
@@ -63,14 +63,14 @@ class Product < ActiveRecord::Base
     end
 
     columns.each do |col|
-      # TODO fix to encompass cost and code
-      if (col=='cost' || col=='code') && is_numeric?(query)
-        items_from_scope = item_set.send("_#{col}", query).limit(2)
-      # elsif !is_numeric?(query) && (col != 'cost' || col !='code')
-    else
-        # TODO use limit to remove excess stuff
-        # TODO make limit togglable?
-        items_from_scope = item_set.send("_#{col}", query).limit(2)
+      if is_numeric?(query)
+        if col=='code'
+          query = query.to_s
+        end
+
+        items_from_scope = item_set.send("_#{col}", query).limit(5)
+      elsif col!='price' && col != 'code'
+        items_from_scope = item_set.send("_#{col}", query).limit(5)
       end
 
       unless items_from_scope.nil?
@@ -108,14 +108,11 @@ class Product < ActiveRecord::Base
     end
 
     regex = "%"+regex+'%'
-
-    # return regex
   end
 
   def self.get_relevant_columns
     exclude_columns = ['id', 'image_url', 'created_at', 'updated_at', 'slot_id']
-    # REVIEW for testing
-    exclude_columns << 'code' << 'price'
+    exclude_columns << 'price'
     Product.attribute_names - exclude_columns
   end
 
