@@ -1,15 +1,17 @@
 class HomeController < ApplicationController
   def index
-    @slots = Slot.order('id ASC').all
-    @slots_arr = []
+    # @slots = Slot.order('id ASC').all
+    # @slots_arr = []
+    #
+    # @slots.each do |slot|
+    #   if slot.cards.count == 1
+    #     direct_card_assign(slot, slot.cards.first)
+    #   end
+    #
+    #   @slots_arr << {slot: slot, path: slot_path(slot)}
+    # end
 
-    @slots.each do |slot|
-      if slot.cards.count == 1
-        direct_card_assign(slot, slot.cards.first)
-      end
-
-      @slots_arr << {slot: slot, path: slot_path(slot)}
-    end
+    @products = Product.all
 
     respond_to do |format|
       format.html

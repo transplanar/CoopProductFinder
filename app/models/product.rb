@@ -6,6 +6,8 @@ class Product < ActiveRecord::Base
   scope :_department, ->(regex){Product.where("department ILIKE ?", regex)}
 
   def self.search user_input
+    puts "Executing search using #{user_input}"
+    
     unless user_input.blank?
       unless is_numeric?(user_input)
         search_queries = user_input.split
