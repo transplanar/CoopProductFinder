@@ -9,8 +9,7 @@ Rails.application.routes.draw do
   # post 'home/clear_filters/' => 'home#clear_filters', as: :clear_filters
 
   # resources :slots, only: [:show]
-  # resources :product, only: [:show]
-  resources :products
+  resources :products, only: [:index]
   # post 'slots/:slot_id/assign_card/:id' => 'slots#assign_card', as: :assign_card
   # post 'slots/:slot_id/assign_filter/' => 'slots#assign_filter', as: :assign_filter
   # patch 'slots/:slot_id/delete_filter/' => 'slots#delete_filter', as: :delete_filter

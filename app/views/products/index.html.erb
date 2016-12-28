@@ -7,26 +7,6 @@
   <%= submit_tag "Search" %>
 <% end  %>
 
-
-<!-- <h1>Listing Products</h1> -->
-
-<!-- <table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <%# @products.each do |product| %>
-      <tr>
-        <td><%#= product.name %></td>
-        <td><%#= product.code %></td>
-      </tr>
-    <%# end %>
-  </tbody>
-</table> -->
-
 <h1>Results</h1>
 
 <div class="results">
@@ -34,6 +14,7 @@
       <h3>Results</h3>
 
       <% @results.each do |group, matches| %>
+      <!-- TODO move this to Product model -->
       <h1><%= group.map{|e| e.capitalize}.join(' | ') %></h1>
       <div>
         <% matches.each do |match| %>
@@ -51,5 +32,3 @@
 
 
 <br>
-
-<%= link_to 'New Product', new_product_path %>
