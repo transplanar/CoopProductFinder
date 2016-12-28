@@ -1,5 +1,7 @@
 <p id="notice"><%= notice %></p>
 
+<%= button_to "Load Spreadsheet Data", :action => "loadExcel" %>
+
 <h1>Product Code Search Tool</h1>
 
 <%= form_tag products_path, :method => 'get' do %>
@@ -20,6 +22,7 @@
         <% matches.each do |match| %>
           <%= match[:item][:name] %>
           <%= match[:item][:code] %>
+          <%= match[:term_matches].join(' ').html_safe %>
           <br />
         <% end %>
       </div>

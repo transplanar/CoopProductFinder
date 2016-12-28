@@ -7,7 +7,7 @@ class Product < ActiveRecord::Base
 
   def self.search user_input
     puts "Executing search using #{user_input}"
-    
+
     unless user_input.blank?
       unless is_numeric?(user_input)
         search_queries = user_input.split
@@ -78,11 +78,14 @@ class Product < ActiveRecord::Base
       unless items_from_scope.nil?
         items_from_scope.each do |item|
           if item_match_data.empty?
-            results << {item: item, columns: [col], term_matches: [item["#{col}"]]}
+            term_formatted = format_term(item["#{col}"], query)
+            results << {item: item, columns: [col], term_matches: [term_formatted]}
           else
             existing_item = item_match_data.select{|e| e[:item] == item}.first
             existing_item[:columns] = existing_item[:columns] | [col]
-            existing_item[:term_matches] = existing_item[:term_matches] | [item["#{col}"]]
+            term_formatted = format_term(item["#{col}"], query)
+            # existing_item[:term_matches] = existing_item[:term_matches] | [item["#{col}"]]
+            existing_item[:term_matches] = existing_item[:term_matches] | [term_formatted]
 
             results << existing_item
           end
@@ -121,5 +124,21 @@ class Product < ActiveRecord::Base
   def self.is_numeric?(obj)
     new_str = obj.to_s.gsub('%','')
     new_str.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  end
+
+  def self.format_term string, sub_string
+    string_arr = string.split(//)
+    sub_string = sub_string.gsub('%','')
+
+    sub_string.split(//).each do |char|
+      index = string_arr.find_index{|e| e.upcase == char || e.downcase == char}
+
+      formatted_term = "<span class='matched_letter_highlight'>#{string[index]}</span>"
+      string_arr[index] = formatted_term
+    end
+
+    new_string = string_arr.join
+
+    return new_string
   end
 end
