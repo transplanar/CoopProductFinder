@@ -74,3 +74,21 @@ Product.create!(
   keywords: 'Onion',
   department: 'Produce'
 )
+
+data = Roo::Excelx.new("./Bulk_Spreadsheet.xlsx")
+
+data.default_sheet = data.sheets.first
+
+2.upto(data.last_row) do |line|
+  name = data.cell(line, 'E')
+  code = data.cell(line, 'B')
+
+  # if code < 100.000
+    Product.create!(
+      name: name,
+      code: code,
+      department: 'Bulk'
+    )
+  # end
+
+end

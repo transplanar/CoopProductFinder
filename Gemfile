@@ -28,3 +28,7 @@ gem 'bootstrap-sass'
 gem 'arel'
 
 gem 'react-rails'
+
+gem "spreadsheet"
+
+gem 'roo'

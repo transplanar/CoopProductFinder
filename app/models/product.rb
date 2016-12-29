@@ -70,9 +70,9 @@ class Product < ActiveRecord::Base
           query = query.to_s
         end
 
-        items_from_scope = item_set.send("_#{col}", query).limit(5)
+        items_from_scope = item_set.send("_#{col}", query)
       elsif col!='price' && col != 'code'
-        items_from_scope = item_set.send("_#{col}", query).limit(5)
+        items_from_scope = item_set.send("_#{col}", query)
       end
 
       unless items_from_scope.nil?
@@ -84,7 +84,6 @@ class Product < ActiveRecord::Base
             existing_item = item_match_data.select{|e| e[:item] == item}.first
             existing_item[:columns] = existing_item[:columns] | [col]
             term_formatted = format_term(item["#{col}"], query)
-            # existing_item[:term_matches] = existing_item[:term_matches] | [item["#{col}"]]
             existing_item[:term_matches] = existing_item[:term_matches] | [term_formatted]
 
             results << existing_item
@@ -126,19 +125,32 @@ class Product < ActiveRecord::Base
     new_str.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
   end
 
+  # FIXME prevent from finding things out of order
   def self.format_term string, sub_string
-    string_arr = string.split(//)
+
+
+    # Test non-consective
+    # string_arr = string.split(//)
+    string_arr = string.chars
     sub_string = sub_string.gsub('%','')
 
-    sub_string.split(//).each do |char|
-      index = string_arr.find_index{|e| e.upcase == char || e.downcase == char}
-
-      formatted_term = "<span class='matched_letter_highlight'>#{string[index]}</span>"
-      string_arr[index] = formatted_term
+    sub_string.chars.reverse_each do |char|
+      test = string.upto(char){|e| e}
+      puts "test #{test}"
+      if string.index(test)
+        puts "#{test} found at #{string.index(test)}"
+      end
     end
 
-    new_string = string_arr.join
-
-    return new_string
+    # sub_string.split(//).each do |char|
+    #   index = string_arr.find_index{|e| e.upcase == char || e.downcase == char}
+    #
+    #   formatted_term = "<span class='matched_letter_highlight'>#{string_arr[index]}</span>"
+    #   string_arr[index] = formatted_term
+    # end
+    #
+    # new_string = string_arr.join
+    #
+    # return new_string
   end
 end
