@@ -127,30 +127,54 @@ class Product < ActiveRecord::Base
 
   # FIXME prevent from finding things out of order
   def self.format_term string, sub_string
+    puts "FORMATTING STRING <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    puts "FORMATTING STRING <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
 
-    # Test non-consective
     # string_arr = string.split(//)
     string_arr = string.chars
     sub_string = sub_string.gsub('%','')
 
-    sub_string.chars.reverse_each do |char|
-      test = string.upto(char){|e| e}
-      puts "test #{test}"
-      if string.index(test)
-        puts "#{test} found at #{string.index(test)}"
-      end
+    # puts "reverse string #{string.reverse}"
+    # puts "reverse string #{sub_string.reverse}"
+
+    #
+    # Test non-consective
+    # sub_string.chars.reverse_each do |char|
+    #   test = string.upto(char){|e| e}
+    #   puts "test #{test}"
+    #   if string.index(test)
+    #     puts "#{test} found at #{string.index(test)}"
+    #   end
+    # end
+
+    full_string = []
+    current_string_arr = string_arr
+
+    sub_string.split(//).each do |char|
+      # index = string_arr.find_index{|e| e.upcase == char || e.downcase == char}
+      index = current_string_arr.find_index{|e| e.upcase == char || e.downcase == char}
+
+      # formatted_term = "<span class='matched_letter_highlight'>#{string_arr[index]}</span>"
+      formatted_term = "<span class='matched_letter_highlight'>#{current_string_arr[index]}</span>"
+      # string_arr[index] = formatted_term
+      current_string_arr[index] = formatted_term
+      full_string << current_string_arr[0..index]
+      # current_string_arr = string_arr[index..string_arr.length]
+      puts "Current string BEFORE #{current_string_arr}"
+      current_string_arr = current_string_arr[index+1..string_arr.length]
+      puts "Current string AFTER #{current_string_arr}"
+      puts "Full string #{full_string}"
+      puts "********************************************"
     end
 
-    # sub_string.split(//).each do |char|
-    #   index = string_arr.find_index{|e| e.upcase == char || e.downcase == char}
-    #
-    #   formatted_term = "<span class='matched_letter_highlight'>#{string_arr[index]}</span>"
-    #   string_arr[index] = formatted_term
-    # end
-    #
+    full_string << current_string_arr
+
     # new_string = string_arr.join
-    #
-    # return new_string
+    # new_string = current_string_arr.join
+    new_string = full_string.join
+    puts "FULL STRING #{new_string}"
+
+    return new_string
   end
 end
